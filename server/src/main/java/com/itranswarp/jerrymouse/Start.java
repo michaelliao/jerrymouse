@@ -72,11 +72,11 @@ public class Start {
 
     public void start(String warFile, String customConfigPath) throws IOException {
         Path warPath = parseWarFile(warFile);
-        Path extractPath = createExtractTo();
-        // extract war:
-        Path[] ps = extractWar(warPath, extractPath);
 
-        String webRoot = extractPath.toString();
+        // extract war if necessary:
+        Path[] ps = extractWarIfNecessary(warPath);
+
+        String webRoot = ps[0].getParent().getParent().toString();
         logger.info("set web root: {}", webRoot);
 
         // load configs:
@@ -174,7 +174,17 @@ public class Start {
         logger.info("jerrymouse http server was shutdown.");
     }
 
-    Path[] extractWar(Path warPath, Path extractPath) throws IOException {
+    // return classes and lib path:
+    Path[] extractWarIfNecessary(Path warPath) throws IOException {
+        if (Files.isDirectory(warPath)) {
+            logger.info("war is directy: {}", warPath);
+            Path classesPath = warPath.resolve("WEB-INF/classes");
+            Path libPath = warPath.resolve("WEB-INF/lib");
+            Files.createDirectories(classesPath);
+            Files.createDirectories(libPath);
+            return new Path[] { classesPath, libPath };
+        }
+        Path extractPath = createExtractTo();
         logger.info("extract '{}' to '{}'", warPath, extractPath);
         JarFile war = new JarFile(warPath.toFile());
         war.stream().sorted((e1, e2) -> e1.getName().compareTo(e2.getName())).forEach(entry -> {
@@ -205,11 +215,7 @@ public class Start {
 
     Path parseWarFile(String warFile) {
         Path warPath = Path.of(warFile).toAbsolutePath().normalize();
-        if (!Files.isRegularFile(warPath)) {
-            System.err.printf("war file '%s' was not found.\n", warFile);
-            System.exit(1);
-        }
-        if (!Files.isRegularFile(warPath)) {
+        if (!Files.isRegularFile(warPath) && !Files.isDirectory(warPath)) {
             System.err.printf("war file '%s' was not found.\n", warFile);
             System.exit(1);
         }
