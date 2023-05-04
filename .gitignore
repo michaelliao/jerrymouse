@@ -476,5 +476,6 @@ Temporary Items
 # custom gitignore:
 .*
 test.db
+testdb.*
 !.gitignore
 !.gitsubmodules
