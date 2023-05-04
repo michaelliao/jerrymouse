@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
+import jakarta.servlet.http.Cookie;
+
 public class HttpUtilsTest {
 
     @Test
@@ -27,5 +29,29 @@ public class HttpUtilsTest {
         assertEquals(Locale.of("zh"), list.get(1));
         assertEquals(Locale.of("en", "US"), list.get(2));
         assertEquals(Locale.of("en"), list.get(3));
+    }
+
+    @Test
+    void testParseCookies() {
+        String cookieValue = "_locale_=zh-CN; __gads=ID=9cea9a:T=538083:RT=650183:S=AYcFxG; _session_=d2VpE3ODA1cyOjE41ODh; log=; Hm_lvt_fd4ab4=813452,823531,925127,620704";
+        Cookie[] cookies = HttpUtils.parseCookies(cookieValue);
+        assertEquals(5, cookies.length);
+        assertEquals("_locale_", cookies[0].getName());
+        assertEquals("zh-CN", cookies[0].getValue());
+
+        assertEquals("__gads", cookies[1].getName());
+        assertEquals("ID=9cea9a:T=538083:RT=650183:S=AYcFxG", cookies[1].getValue());
+
+        assertEquals("_session_", cookies[2].getName());
+        assertEquals("d2VpE3ODA1cyOjE41ODh", cookies[2].getValue());
+
+        assertEquals("log", cookies[3].getName());
+        assertEquals("", cookies[3].getValue());
+
+        assertEquals("Hm_lvt_fd4ab4", cookies[4].getName());
+        assertEquals("813452,823531,925127,620704", cookies[4].getValue());
+
+        assertNull(HttpUtils.parseCookies(null));
+        assertNull(HttpUtils.parseCookies(""));
     }
 }
