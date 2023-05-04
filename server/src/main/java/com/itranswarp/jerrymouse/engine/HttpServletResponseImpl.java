@@ -63,10 +63,9 @@ public class HttpServletResponseImpl implements HttpServletResponse {
             return this.output;
         }
         if (callOutput.booleanValue()) {
-            throw new IllegalStateException("Cannot re-open output stream.");
-        } else {
-            throw new IllegalStateException("Cannot open output stream when writer is opened.");
+            return this.output;
         }
+        throw new IllegalStateException("Cannot open output stream when writer is opened.");
     }
 
     @Override
@@ -77,11 +76,10 @@ public class HttpServletResponseImpl implements HttpServletResponse {
             this.callOutput = Boolean.FALSE;
             return this.writer;
         }
-        if (callOutput.booleanValue()) {
-            throw new IllegalStateException("Cannot open writer when output stream is opened.");
-        } else {
-            throw new IllegalStateException("Cannot re-open writer.");
+        if (!callOutput.booleanValue()) {
+            return this.writer;
         }
+        throw new IllegalStateException("Cannot open writer when output stream is opened.");
     }
 
     @Override
@@ -231,7 +229,11 @@ public class HttpServletResponseImpl implements HttpServletResponse {
 
     @Override
     public Collection<String> getHeaders(String name) {
-        return this.headers.getHeaders(name);
+        List<String> hs = this.headers.getHeaders(name);
+        if (hs == null) {
+            return List.of();
+        }
+        return hs;
     }
 
     @Override

@@ -41,8 +41,9 @@ import com.itranswarp.jerrymouse.utils.HttpUtils;
 public class HttpServletRequestImpl implements HttpServletRequest {
 
     final Config config;
-    final ServletContext servletContext;
+    final ServletContextImpl servletContext;
     final HttpExchangeRequest exchangeRequest;
+    final HttpServletResponse response;
     final String method;
     final HttpHeaders headers;
     final Parameters parameters;
@@ -55,10 +56,11 @@ public class HttpServletRequestImpl implements HttpServletRequest {
 
     Boolean inputCalled = null;
 
-    public HttpServletRequestImpl(Config config, ServletContext servletContext, HttpExchangeRequest exchangeRequest) {
+    public HttpServletRequestImpl(Config config, ServletContextImpl servletContext, HttpExchangeRequest exchangeRequest, HttpServletResponse response) {
         this.config = config;
         this.servletContext = servletContext;
         this.exchangeRequest = exchangeRequest;
+        this.response = response;
 
         this.characterEncoding = config.server.requestEncoding;
         this.method = exchangeRequest.getRequestMethod();
@@ -265,8 +267,8 @@ public class HttpServletRequestImpl implements HttpServletRequest {
 
     @Override
     public Cookie[] getCookies() {
-        // TODO Auto-generated method stub
-        return null;
+        String cookieValue = this.getHeader("Cookie");
+        return HttpUtils.parseCookies(cookieValue);
     }
 
     @Override
@@ -276,20 +278,18 @@ public class HttpServletRequestImpl implements HttpServletRequest {
 
     @Override
     public String getPathInfo() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public String getPathTranslated() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.servletContext.getRealPath(getRequestURI());
     }
 
     @Override
     public String getContextPath() {
-        // TODO Auto-generated method stub
-        return null;
+        // root context path:
+        return "";
     }
 
     @Override
@@ -317,7 +317,6 @@ public class HttpServletRequestImpl implements HttpServletRequest {
 
     @Override
     public String getRequestedSessionId() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -340,37 +339,53 @@ public class HttpServletRequestImpl implements HttpServletRequest {
 
     @Override
     public HttpSession getSession(boolean create) {
-        // TODO Auto-generated method stub
-        return null;
+        String sessionId = null;
+        Cookie[] cookies = getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (config.server.webApp.sessionCookieName.equals(cookie.getName())) {
+                    sessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (sessionId == null && !create) {
+            return null;
+        }
+        if (sessionId == null) {
+            if (this.response.isCommitted()) {
+                throw new IllegalStateException("Cannot create session for response is commited.");
+            }
+            sessionId = UUID.randomUUID().toString();
+            // set cookie:
+            String cookieValue = config.server.webApp.sessionCookieName + "=" + sessionId + "; Path=/; SameSite=Strict; HttpOnly";
+            this.response.addHeader("Set-Cookie", cookieValue);
+        }
+        return this.servletContext.sessionManager.getSession(this.servletContext, sessionId);
     }
 
     @Override
     public HttpSession getSession() {
-        // TODO Auto-generated method stub
-        return null;
+        return getSession(true);
     }
 
     @Override
     public String changeSessionId() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException("changeSessionId() is not supported.");
     }
 
     @Override
     public boolean isRequestedSessionIdValid() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isRequestedSessionIdFromCookie() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public boolean isRequestedSessionIdFromURL() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -422,7 +437,11 @@ public class HttpServletRequestImpl implements HttpServletRequest {
 
     @Override
     public Enumeration<String> getHeaders(String name) {
-        return Collections.enumeration(this.headers.getHeaders(name));
+        List<String> hs = this.headers.getHeaders(name);
+        if (hs == null) {
+            return Collections.emptyEnumeration();
+        }
+        return Collections.enumeration(hs);
     }
 
     @Override
@@ -467,7 +486,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
     public String getRemoteAddr() {
         String addr = null;
         String forwarded = config.server.forwardedHeaders.forwardedFor;
-        if (!forwarded.isEmpty()) {
+        if (forwarded != null && !forwarded.isEmpty()) {
             String forwardedHeader = getHeader(forwarded);
             if (forwardedHeader != null) {
                 int n = forwardedHeader.indexOf(',');

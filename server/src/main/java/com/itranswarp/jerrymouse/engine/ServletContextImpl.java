@@ -64,10 +64,13 @@ import jakarta.servlet.http.HttpSessionListener;
 public class ServletContextImpl implements ServletContext {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
+
     final ClassLoader classLoader;
     final Config config;
     // web root dir:
     final Path webRoot;
+    // session manager:
+    final SessionManagerImpl sessionManager;
 
     private boolean initialized = false;
 
@@ -98,6 +101,7 @@ public class ServletContextImpl implements ServletContext {
         this.config = config;
         this.sessionCookieConfig = new SessionCookieConfigImpl(config);
         this.webRoot = Paths.get(webRoot).normalize().toAbsolutePath();
+        this.sessionManager = new SessionManagerImpl(config.server.webApp.sessionCookieName, config.server.webApp.sessionTimeout);
         logger.info("set web root: {}", this.webRoot);
     }
 
@@ -190,7 +194,7 @@ public class ServletContextImpl implements ServletContext {
         }
         Path loc = this.webRoot.resolve(path).normalize();
         if (loc.startsWith(this.webRoot)) {
-            return URI.create(loc.toString()).toURL();
+            return URI.create("file://" + loc.toString()).toURL();
         }
         throw new MalformedURLException("Path not found: " + originPath);
     }

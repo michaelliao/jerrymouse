@@ -9,16 +9,20 @@ import jakarta.servlet.http.HttpSession;
 
 public class HttpSessionImpl implements HttpSession {
 
-    final ServletContext servletContext;
-    final String sessionId;
+    final ServletContextImpl servletContext;
+
+    String sessionId;
+    int maxInactiveInterval;
     long creationTime;
     long lastAccessedTime;
-    Attributes attributes = new Attributes();
+    Attributes attributes;
 
-    public HttpSessionImpl(ServletContext servletContext, String sessionId) {
+    public HttpSessionImpl(ServletContextImpl servletContext, String sessionId, int interval) {
         this.servletContext = servletContext;
         this.sessionId = sessionId;
         this.creationTime = this.lastAccessedTime = System.currentTimeMillis();
+        this.attributes = new Attributes();
+        setMaxInactiveInterval(interval);
     }
 
     @Override
@@ -43,20 +47,20 @@ public class HttpSessionImpl implements HttpSession {
 
     @Override
     public void setMaxInactiveInterval(int interval) {
-        // TODO Auto-generated method stub
+        this.maxInactiveInterval = interval;
 
     }
 
     @Override
     public int getMaxInactiveInterval() {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.maxInactiveInterval;
     }
 
     @Override
     public void invalidate() {
-        // TODO Auto-generated method stub
-
+        checkValid();
+        this.servletContext.sessionManager.remove(this);
+        this.sessionId = null;
     }
 
     @Override
@@ -68,16 +72,19 @@ public class HttpSessionImpl implements HttpSession {
 
     @Override
     public Object getAttribute(String name) {
+        checkValid();
         return this.attributes.getAttribute(name);
     }
 
     @Override
     public Enumeration<String> getAttributeNames() {
+        checkValid();
         return this.attributes.getAttributeNames();
     }
 
     @Override
     public void setAttribute(String name, Object value) {
+        checkValid();
         if (value == null) {
             removeAttribute(name);
         } else {
@@ -87,6 +94,17 @@ public class HttpSessionImpl implements HttpSession {
 
     @Override
     public void removeAttribute(String name) {
+        checkValid();
         this.attributes.removeAttribute(name);
+    }
+
+    void setLastAccessTime(long lastAccessedTime) {
+        this.lastAccessedTime = lastAccessedTime;
+    }
+
+    void checkValid() {
+        if (this.sessionId == null) {
+            throw new IllegalStateException("Session is already invalidated.");
+        }
     }
 }
