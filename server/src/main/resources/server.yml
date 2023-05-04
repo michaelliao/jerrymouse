@@ -5,13 +5,13 @@ server:
   backlog: 0
   request-encoding: UTF-8
   response-encoding: UTF-8
-  name: jerrymouse Web Server/1.0
+  name: Jerrymouse Web Server/1.0
   thread-pool-size: 200
   enable-virtual-thread: false
 
   # default one and only one web app:
   web-app:
-    name: jerrymouse Webapp
+    name: Jerrymouse Webapp
     file-listings: false
     virtual-server-name: localhost
     # session cookie name:
