@@ -51,8 +51,6 @@ public class HttpConnector implements HttpHandler, AutoCloseable {
             this.servletContext.process(request, response);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            Thread.currentThread().setContextClassLoader(null);
         }
     }
 }

@@ -32,6 +32,8 @@ import jakarta.servlet.ServletRegistration;
 import jakarta.servlet.SessionCookieConfig;
 import jakarta.servlet.SessionTrackingMode;
 import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ServletContextImpl implements ServletContext {
 
@@ -43,10 +45,7 @@ public class ServletContextImpl implements ServletContext {
 
     final List<ServletMapping> servletMappings = new ArrayList<>();
 
-    public ServletContextImpl() {
-    }
-
-    public void process(HttpServletRequestImpl request, HttpServletResponseImpl response) throws IOException, ServletException {
+    public void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String path = request.getRequestURI();
         // search servlet:
         Servlet servlet = null;
