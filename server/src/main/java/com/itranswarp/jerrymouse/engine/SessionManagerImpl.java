@@ -13,10 +13,8 @@ public class SessionManagerImpl implements SessionManager, Runnable {
     final Logger logger = LoggerFactory.getLogger(getClass());
     final Map<String, HttpSessionImpl> sessions = new ConcurrentHashMap<>();
     final int inactiveInterval;
-    final String sessionCookieName;
 
-    public SessionManagerImpl(String sessionCookieName, int interval) {
-        this.sessionCookieName = sessionCookieName;
+    public SessionManagerImpl(int interval) {
         this.inactiveInterval = interval;
         Thread t = new Thread(this);
         t.setDaemon(true);

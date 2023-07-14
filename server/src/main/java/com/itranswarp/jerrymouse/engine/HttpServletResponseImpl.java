@@ -188,7 +188,7 @@ public class HttpServletResponseImpl implements HttpServletResponse {
     public void sendError(int sc, String msg) throws IOException {
         checkNotCommitted();
         this.status = sc;
-        commitHeaders(-1);
+        commitHeaders(0);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class HttpServletResponseImpl implements HttpServletResponse {
         checkNotCommitted();
         this.status = 302;
         this.headers.setHeader("Location", location);
-        commitHeaders(-1);
+        commitHeaders(0);
     }
 
     @Override
@@ -282,7 +282,7 @@ public class HttpServletResponseImpl implements HttpServletResponse {
         this.committed = true;
     }
 
-    void cleanup() throws IOException {
+    public void cleanup() throws IOException {
         if (this.callOutput != null) {
             if (this.callOutput.booleanValue()) {
                 this.output.close();

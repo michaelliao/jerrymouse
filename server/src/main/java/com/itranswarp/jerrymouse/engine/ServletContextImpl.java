@@ -57,6 +57,8 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionIdListener;
 import jakarta.servlet.http.HttpSessionListener;
@@ -101,11 +103,11 @@ public class ServletContextImpl implements ServletContext {
         this.config = config;
         this.sessionCookieConfig = new SessionCookieConfigImpl(config);
         this.webRoot = Paths.get(webRoot).normalize().toAbsolutePath();
-        this.sessionManager = new SessionManagerImpl(config.server.webApp.sessionCookieName, config.server.webApp.sessionTimeout);
+        this.sessionManager = new SessionManagerImpl(config.server.webApp.sessionTimeout);
         logger.info("set web root: {}", this.webRoot);
     }
 
-    public void process(HttpServletRequestImpl request, HttpServletResponseImpl response) throws IOException {
+    public void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getRequestURI();
         // search servlet:
         Servlet servlet = this.defaultServlet;
@@ -122,7 +124,6 @@ public class ServletContextImpl implements ServletContext {
             PrintWriter pw = response.getWriter();
             pw.write("<h1>404 Not Found</h1><p>No mapping for URL: " + HtmlUtils.encodeHtml(path) + "</p>");
             pw.flush();
-            response.cleanup();
             return;
         }
         // search filter:
@@ -137,7 +138,6 @@ public class ServletContextImpl implements ServletContext {
         FilterChain chain = new FilterChainImpl(filters, servlet);
         try {
             chain.doFilter(request, response);
-            response.cleanup();
         } catch (ServletException e) {
             logger.error(e.getMessage(), e);
             throw new IOException(e);

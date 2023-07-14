@@ -65,6 +65,7 @@ public class HttpConnector implements HttpHandler, AutoCloseable {
             logger.error(e.getMessage(), e);
         } finally {
             Thread.currentThread().setContextClassLoader(null);
+            response.cleanup();
         }
     }
 }
