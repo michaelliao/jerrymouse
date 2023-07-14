@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Lazy proxy which hode a Map.
+ * Lazy proxy which holds a Map.
  */
 public class LazyMap<V> {
 
