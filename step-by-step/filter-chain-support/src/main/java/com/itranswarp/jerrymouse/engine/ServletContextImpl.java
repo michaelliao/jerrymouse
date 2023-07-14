@@ -44,8 +44,8 @@ public class ServletContextImpl implements ServletContext {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Map<String, ServletRegistrationImpl> servletRegistrations = new HashMap<>();
-    private Map<String, FilterRegistrationImpl> filterRegistrations = new HashMap<>();
+    final Map<String, ServletRegistrationImpl> servletRegistrations = new HashMap<>();
+    final Map<String, FilterRegistrationImpl> filterRegistrations = new HashMap<>();
 
     final Map<String, Servlet> nameToServlets = new HashMap<>();
     final Map<String, Filter> nameToFilters = new HashMap<>();

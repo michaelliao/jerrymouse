@@ -30,6 +30,7 @@ public class HelloFilter implements Filter {
         if (name != null && names.contains(name)) {
             chain.doFilter(request, response);
         } else {
+            logger.warn("Access denied: name = {}", name);
             HttpServletResponse resp = (HttpServletResponse) response;
             resp.sendError(403, "Forbidden");
         }
