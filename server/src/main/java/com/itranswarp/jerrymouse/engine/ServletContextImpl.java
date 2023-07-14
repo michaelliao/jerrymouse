@@ -711,16 +711,23 @@ public class ServletContextImpl implements ServletContext {
                 registration.filter.init(registration.getFilterConfig());
                 this.nameToFilters.put(name, registration.filter);
                 for (String urlPattern : registration.getUrlPatternMappings()) {
-                    this.filterMappings.add(new FilterMapping(urlPattern, registration.filter));
+                    this.filterMappings.add(new FilterMapping(name, urlPattern, registration.filter));
                 }
                 registration.initialized = true;
             } catch (ServletException e) {
                 logger.error("init filter failed: " + name + " / " + registration.filter.getClass().getName(), e);
             }
         }
-        // important: sort mappings:
+        // important: sort by servlet mapping:
         Collections.sort(this.servletMappings);
-        Collections.sort(this.filterMappings);
+        // important: sort by filter name:
+        Collections.sort(this.filterMappings, (f1, f2) -> {
+            int cmp = f1.filterName.compareTo(f2.filterName);
+            if (cmp == 0) {
+                cmp = f1.compareTo(f2);
+            }
+            return cmp;
+        });
 
         this.initialized = true;
     }
