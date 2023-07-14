@@ -79,7 +79,7 @@ public class ServletContextImpl implements ServletContext {
     // web root dir:
     final Path webRoot;
     // session manager:
-    final SessionManagerImpl sessionManager;
+    final SessionManager sessionManager;
 
     private boolean initialized = false;
 
@@ -110,7 +110,7 @@ public class ServletContextImpl implements ServletContext {
         this.config = config;
         this.sessionCookieConfig = new SessionCookieConfigImpl(config);
         this.webRoot = Paths.get(webRoot).normalize().toAbsolutePath();
-        this.sessionManager = new SessionManagerImpl(this, config.server.webApp.sessionTimeout);
+        this.sessionManager = new SessionManager(this, config.server.webApp.sessionTimeout);
         logger.info("set web root: {}", this.webRoot);
     }
 

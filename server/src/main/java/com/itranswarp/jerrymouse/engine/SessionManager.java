@@ -10,7 +10,7 @@ import com.itranswarp.jerrymouse.utils.DateUtils;
 
 import jakarta.servlet.http.HttpSession;
 
-public class SessionManagerImpl implements Runnable {
+public class SessionManager implements Runnable {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -18,7 +18,7 @@ public class SessionManagerImpl implements Runnable {
     final Map<String, HttpSessionImpl> sessions = new ConcurrentHashMap<>();
     final int inactiveInterval;
 
-    public SessionManagerImpl(ServletContextImpl servletContext, int interval) {
+    public SessionManager(ServletContextImpl servletContext, int interval) {
         this.servletContext = servletContext;
         this.inactiveInterval = interval;
         Thread t = new Thread(this);
