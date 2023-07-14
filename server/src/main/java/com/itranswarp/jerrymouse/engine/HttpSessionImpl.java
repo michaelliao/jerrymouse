@@ -1,8 +1,6 @@
 package com.itranswarp.jerrymouse.engine;
 
 import java.util.Enumeration;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.itranswarp.jerrymouse.engine.support.Attributes;
 
@@ -12,7 +10,6 @@ import jakarta.servlet.http.HttpSession;
 public class HttpSessionImpl implements HttpSession {
 
     final ServletContextImpl servletContext;
-    final Lock lock = new ReentrantLock();
 
     String sessionId;
     int maxInactiveInterval;
@@ -24,7 +21,7 @@ public class HttpSessionImpl implements HttpSession {
         this.servletContext = servletContext;
         this.sessionId = sessionId;
         this.creationTime = this.lastAccessedTime = System.currentTimeMillis();
-        this.attributes = new Attributes();
+        this.attributes = new Attributes(true);
         setMaxInactiveInterval(interval);
     }
 
@@ -61,14 +58,9 @@ public class HttpSessionImpl implements HttpSession {
 
     @Override
     public void invalidate() {
-        lock.lock();
-        try {
-            checkValid();
-            this.servletContext.sessionManager.remove(this);
-            this.sessionId = null;
-        } finally {
-            lock.unlock();
-        }
+        checkValid();
+        this.servletContext.sessionManager.remove(this);
+        this.sessionId = null;
     }
 
     @Override
@@ -80,54 +72,30 @@ public class HttpSessionImpl implements HttpSession {
 
     @Override
     public Object getAttribute(String name) {
-        lock.lock();
-        try {
-            checkValid();
-            return this.attributes.getAttribute(name);
-        } finally {
-            lock.unlock();
-        }
+        checkValid();
+        return this.attributes.getAttribute(name);
     }
 
     @Override
     public Enumeration<String> getAttributeNames() {
-        lock.lock();
-        try {
-            checkValid();
-            return this.attributes.getAttributeNames();
-        } finally {
-            lock.unlock();
-        }
+        checkValid();
+        return this.attributes.getAttributeNames();
     }
 
     @Override
     public void setAttribute(String name, Object value) {
-        lock.lock();
-        try {
-            checkValid();
-            if (value == null) {
-                removeAttribute(name);
-            } else {
-                this.attributes.setAttribute(name, value);
-            }
-        } finally {
-            lock.unlock();
+        checkValid();
+        if (value == null) {
+            removeAttribute(name);
+        } else {
+            this.attributes.setAttribute(name, value);
         }
     }
 
     @Override
     public void removeAttribute(String name) {
-        lock.lock();
-        try {
-            checkValid();
-            this.attributes.removeAttribute(name);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    void setLastAccessTime(long lastAccessedTime) {
-        this.lastAccessedTime = lastAccessedTime;
+        checkValid();
+        this.attributes.removeAttribute(name);
     }
 
     void checkValid() {

@@ -6,6 +6,14 @@ import java.util.Objects;
 
 public class Attributes extends LazyMap<Object> {
 
+    public Attributes(boolean concurrent) {
+        super(concurrent);
+    }
+
+    public Attributes() {
+        this(false);
+    }
+
     public Object getAttribute(String name) {
         Objects.requireNonNull(name, "name is null.");
         return super.get(name);

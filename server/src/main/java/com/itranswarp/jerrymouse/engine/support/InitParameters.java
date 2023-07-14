@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class InitParameters extends LazyMap<String> {
+
+    public InitParameters() {
+        super(false);
+    }
+
     /**
      * Sets the initialization parameter with the given name and value on the
      * Servlet or Filter that is represented by this Registration.

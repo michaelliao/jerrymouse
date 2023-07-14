@@ -6,33 +6,41 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.itranswarp.jerrymouse.utils.DateUtils;
+
 import jakarta.servlet.http.HttpSession;
 
-public class SessionManagerImpl implements SessionManager, Runnable {
+public class SessionManagerImpl implements Runnable {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
+
+    final ServletContextImpl servletContext;
     final Map<String, HttpSessionImpl> sessions = new ConcurrentHashMap<>();
     final int inactiveInterval;
 
-    public SessionManagerImpl(int interval) {
+    public SessionManagerImpl(ServletContextImpl servletContext, int interval) {
+        this.servletContext = servletContext;
         this.inactiveInterval = interval;
         Thread t = new Thread(this);
         t.setDaemon(true);
         t.start();
     }
 
-    public HttpSession getSession(ServletContextImpl ctx, String sessionId) {
+    public HttpSession getSession(String sessionId) {
         HttpSessionImpl session = sessions.get(sessionId);
         if (session == null) {
-            session = new HttpSessionImpl(ctx, sessionId, inactiveInterval);
+            session = new HttpSessionImpl(this.servletContext, sessionId, inactiveInterval);
             sessions.put(sessionId, session);
+            this.servletContext.invokeHttpSessionCreated(session);
+        } else {
+            session.lastAccessedTime = System.currentTimeMillis();
         }
         return session;
     }
 
-    @Override
     public void remove(HttpSession session) {
         this.sessions.remove(session.getId());
+        this.servletContext.invokeHttpSessionDestroyed(session);
     }
 
     @Override
@@ -47,8 +55,9 @@ public class SessionManagerImpl implements SessionManager, Runnable {
             for (String sessionId : sessions.keySet()) {
                 HttpSession session = sessions.get(sessionId);
                 if (now + session.getMaxInactiveInterval() * 1000L > session.getLastAccessedTime()) {
-                    logger.atDebug().log("remove expired session: {}", sessionId);
-                    sessions.remove(sessionId);
+                    logger.atDebug().log("remove expired session: {}, last access time: {}", sessionId,
+                            DateUtils.formatDateTimeGMT(session.getLastAccessedTime()));
+                    session.invalidate();
                 }
             }
         }

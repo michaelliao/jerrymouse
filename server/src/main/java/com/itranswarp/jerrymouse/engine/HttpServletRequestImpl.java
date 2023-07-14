@@ -361,7 +361,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
             String cookieValue = config.server.webApp.sessionCookieName + "=" + sessionId + "; Path=/; SameSite=Strict; HttpOnly";
             this.response.addHeader("Set-Cookie", cookieValue);
         }
-        return this.servletContext.sessionManager.getSession(this.servletContext, sessionId);
+        return this.servletContext.sessionManager.getSession(sessionId);
     }
 
     @Override
