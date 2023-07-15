@@ -48,7 +48,7 @@ public class SessionManager implements Runnable {
             } catch (InterruptedException e) {
                 break;
             }
-            long now = System.currentTimeMillis() - 60_000L;
+            long now = System.currentTimeMillis();
             for (String sessionId : sessions.keySet()) {
                 HttpSession session = sessions.get(sessionId);
                 if (session.getLastAccessedTime() + session.getMaxInactiveInterval() * 1000L < now) {
