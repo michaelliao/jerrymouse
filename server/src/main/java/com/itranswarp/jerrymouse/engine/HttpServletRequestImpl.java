@@ -471,13 +471,19 @@ public class HttpServletRequestImpl implements HttpServletRequest {
         if (value == null) {
             removeAttribute(name);
         } else {
-            this.attributes.setAttribute(name, value);
+            Object oldValue = this.attributes.setAttribute(name, value);
+            if (oldValue == null) {
+                this.servletContext.invokeServletRequestAttributeAdded(this, name, value);
+            } else {
+                this.servletContext.invokeServletRequestAttributeReplaced(this, name, value);
+            }
         }
     }
 
     @Override
     public void removeAttribute(String name) {
-        this.attributes.removeAttribute(name);
+        Object oldValue = this.attributes.removeAttribute(name);
+        this.servletContext.invokeServletRequestAttributeRemoved(this, name, oldValue);
     }
 
     // address and port ///////////////////////////////////////////////////////
@@ -528,5 +534,10 @@ public class HttpServletRequestImpl implements HttpServletRequest {
     public int getLocalPort() {
         InetSocketAddress address = this.exchangeRequest.getLocalAddress();
         return address.getPort();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("HttpServletRequestImpl@%s[%s:%s]", Integer.toHexString(hashCode()), getMethod(), getRequestURI());
     }
 }
