@@ -54,7 +54,7 @@ public class SessionManager implements Runnable {
             long now = System.currentTimeMillis();
             for (String sessionId : sessions.keySet()) {
                 HttpSession session = sessions.get(sessionId);
-                if (now + session.getMaxInactiveInterval() * 1000L > session.getLastAccessedTime()) {
+                if (session.getLastAccessedTime() + session.getMaxInactiveInterval() * 1000L < now) {
                     logger.atDebug().log("remove expired session: {}, last access time: {}", sessionId,
                             DateUtils.formatDateTimeGMT(session.getLastAccessedTime()));
                     session.invalidate();
