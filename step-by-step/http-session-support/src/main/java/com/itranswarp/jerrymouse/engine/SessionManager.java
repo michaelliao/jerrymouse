@@ -20,7 +20,7 @@ public class SessionManager implements Runnable {
     public SessionManager(ServletContextImpl servletContext, int interval) {
         this.servletContext = servletContext;
         this.inactiveInterval = interval;
-        Thread t = new Thread(this);
+        Thread t = new Thread(this, "Session-Cleanup-Thread");
         t.setDaemon(true);
         t.start();
     }
