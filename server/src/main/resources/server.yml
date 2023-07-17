@@ -16,8 +16,8 @@ server:
     virtual-server-name: localhost
     # session cookie name:
     session-cookie-name: JSESSIONID
-    # session timeout = 30 min:
-    session-timeout: 30
+    # session timeout = 30 min = 1800 sec:
+    session-timeout: 1800
 
   # forwarded headers should ONLY set when behide a reverse proxy like Nginx:
   forwarded-headers:
