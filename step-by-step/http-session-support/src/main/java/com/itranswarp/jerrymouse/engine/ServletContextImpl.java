@@ -147,8 +147,6 @@ public class ServletContextImpl implements ServletContext {
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             throw e;
-        } finally {
-            response.cleanup();
         }
     }
 
