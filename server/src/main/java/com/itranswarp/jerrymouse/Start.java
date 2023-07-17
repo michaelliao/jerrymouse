@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -157,8 +156,9 @@ public class Start {
         if (config.server.enableVirtualThread) {
             logger.info("Virtual thread is enabled.");
         }
-        ExecutorService executor = config.server.enableVirtualThread ? Executors.newVirtualThreadPerTaskExecutor()
-                : new ThreadPoolExecutor(0, config.server.threadPoolSize, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        // config.server.enableVirtualThread ?
+        // Executors.newVirtualThreadPerTaskExecutor() :
+        ExecutorService executor = new ThreadPoolExecutor(0, config.server.threadPoolSize, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
         try (HttpConnector connector = new HttpConnector(config, webRoot, executor, classLoader, autoScannedClasses)) {
             for (;;) {
