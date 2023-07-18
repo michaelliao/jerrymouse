@@ -156,8 +156,8 @@ public class ServletContextImpl implements ServletContext {
 
     // invoke listeners ///////////////////////////////////////////////////////
 
-    void invokeServletContextInitialized(ServletContext ctx) {
-        logger.info("invoke ServletContextInitialized: {}", ctx);
+    void invokeServletContextInitialized() {
+        logger.info("invoke ServletContextInitialized: {}", this);
         if (this.servletContextListeners != null) {
             var event = new ServletContextEvent(this);
             for (var listener : this.servletContextListeners) {
@@ -166,8 +166,8 @@ public class ServletContextImpl implements ServletContext {
         }
     }
 
-    void invokeServletContextDestroyed(ServletContext ctx) {
-        logger.info("invoke ServletContextDestroyed: {}", ctx);
+    void invokeServletContextDestroyed() {
+        logger.info("invoke ServletContextDestroyed: {}", this);
         if (this.servletContextListeners != null) {
             var event = new ServletContextEvent(this);
             for (var listener : this.servletContextListeners) {
@@ -784,7 +784,7 @@ public class ServletContextImpl implements ServletContext {
             }
         }
 
-        this.invokeServletContextInitialized(this);
+        this.invokeServletContextInitialized();
 
         // register @WebServlet and @WebFilter:
         for (Class<?> c : autoScannedClasses) {
@@ -910,7 +910,7 @@ public class ServletContextImpl implements ServletContext {
         });
 
         // notify:
-        this.invokeServletContextDestroyed(this);
+        this.invokeServletContextDestroyed();
     }
 
     private void checkNotInitialized(String name) {
