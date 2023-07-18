@@ -12,7 +12,7 @@ server:
   # default one and only one web app:
   web-app:
     name: Jerrymouse Webapp
-    file-listings: false
+    file-listings: true
     virtual-server-name: localhost
     # session cookie name:
     session-cookie-name: JSESSIONID
