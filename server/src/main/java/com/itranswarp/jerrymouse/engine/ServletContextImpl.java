@@ -156,6 +156,26 @@ public class ServletContextImpl implements ServletContext {
 
     // invoke listeners ///////////////////////////////////////////////////////
 
+    void invokeServletContextInitialized(ServletContext ctx) {
+        logger.info("invoke ServletContextInitialized: {}", ctx);
+        if (this.servletContextListeners != null) {
+            var event = new ServletContextEvent(this);
+            for (var listener : this.servletContextListeners) {
+                listener.contextInitialized(event);
+            }
+        }
+    }
+
+    void invokeServletContextDestroyed(ServletContext ctx) {
+        logger.info("invoke ServletContextDestroyed: {}", ctx);
+        if (this.servletContextListeners != null) {
+            var event = new ServletContextEvent(this);
+            for (var listener : this.servletContextListeners) {
+                listener.contextDestroyed(event);
+            }
+        }
+    }
+
     void invokeServletContextAttributeAdded(String name, Object value) {
         logger.info("invoke ServletContextAttributeAdded: {} = {}", name, value);
         if (this.servletContextAttributeListeners != null) {
@@ -764,14 +784,7 @@ public class ServletContextImpl implements ServletContext {
             }
         }
 
-        var event = new ServletContextEvent(this);
-        this.servletContextListeners.forEach(listener -> {
-            try {
-                listener.contextInitialized(event);
-            } catch (Exception e) {
-                logger.error("contextInitialized() on listener '" + listener + "' failed.", e);
-            }
-        });
+        this.invokeServletContextInitialized(this);
 
         // register @WebServlet and @WebFilter:
         for (Class<?> c : autoScannedClasses) {
@@ -897,14 +910,7 @@ public class ServletContextImpl implements ServletContext {
         });
 
         // notify:
-        var event = new ServletContextEvent(this);
-        this.servletContextListeners.forEach(listener -> {
-            try {
-                listener.contextDestroyed(event);
-            } catch (Exception e) {
-                logger.error("contextDestroyed() on listener '" + listener + "' failed.", e);
-            }
-        });
+        this.invokeServletContextDestroyed(this);
     }
 
     private void checkNotInitialized(String name) {
