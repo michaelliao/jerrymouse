@@ -157,7 +157,7 @@ public class ServletContextImpl implements ServletContext {
     // invoke listeners ///////////////////////////////////////////////////////
 
     void invokeServletContextInitialized() {
-        logger.info("invoke ServletContextInitialized: {}", this);
+        logger.debug("invoke ServletContextInitialized: {}", this);
         if (this.servletContextListeners != null) {
             var event = new ServletContextEvent(this);
             for (var listener : this.servletContextListeners) {
@@ -167,7 +167,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletContextDestroyed() {
-        logger.info("invoke ServletContextDestroyed: {}", this);
+        logger.debug("invoke ServletContextDestroyed: {}", this);
         if (this.servletContextListeners != null) {
             var event = new ServletContextEvent(this);
             for (var listener : this.servletContextListeners) {
@@ -177,7 +177,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletContextAttributeAdded(String name, Object value) {
-        logger.info("invoke ServletContextAttributeAdded: {} = {}", name, value);
+        logger.debug("invoke ServletContextAttributeAdded: {} = {}", name, value);
         if (this.servletContextAttributeListeners != null) {
             var event = new ServletContextAttributeEvent(this, name, value);
             for (var listener : this.servletContextAttributeListeners) {
@@ -187,7 +187,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletContextAttributeRemoved(String name, Object value) {
-        logger.info("invoke ServletContextAttributeRemoved: {} = {}", name, value);
+        logger.debug("invoke ServletContextAttributeRemoved: {} = {}", name, value);
         if (this.servletContextAttributeListeners != null) {
             var event = new ServletContextAttributeEvent(this, name, value);
             for (var listener : this.servletContextAttributeListeners) {
@@ -197,7 +197,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletContextAttributeReplaced(String name, Object value) {
-        logger.info("invoke ServletContextAttributeReplaced: {} = {}", name, value);
+        logger.debug("invoke ServletContextAttributeReplaced: {} = {}", name, value);
         if (this.servletContextAttributeListeners != null) {
             var event = new ServletContextAttributeEvent(this, name, value);
             for (var listener : this.servletContextAttributeListeners) {
@@ -207,7 +207,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletRequestAttributeAdded(HttpServletRequest request, String name, Object value) {
-        logger.info("invoke ServletRequestAttributeAdded: {} = {}, request = {}", name, value, request);
+        logger.debug("invoke ServletRequestAttributeAdded: {} = {}, request = {}", name, value, request);
         if (this.servletRequestAttributeListeners != null) {
             var event = new ServletRequestAttributeEvent(this, request, name, value);
             for (var listener : this.servletRequestAttributeListeners) {
@@ -217,7 +217,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletRequestAttributeRemoved(HttpServletRequest request, String name, Object value) {
-        logger.info("invoke ServletRequestAttributeRemoved: {} = {}, request = {}", name, value, request);
+        logger.debug("invoke ServletRequestAttributeRemoved: {} = {}, request = {}", name, value, request);
         if (this.servletRequestAttributeListeners != null) {
             var event = new ServletRequestAttributeEvent(this, request, name, value);
             for (var listener : this.servletRequestAttributeListeners) {
@@ -227,7 +227,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletRequestAttributeReplaced(HttpServletRequest request, String name, Object value) {
-        logger.info("invoke ServletRequestAttributeReplaced: {} = {}, request = {}", name, value, request);
+        logger.debug("invoke ServletRequestAttributeReplaced: {} = {}, request = {}", name, value, request);
         if (this.servletRequestAttributeListeners != null) {
             var event = new ServletRequestAttributeEvent(this, request, name, value);
             for (var listener : this.servletRequestAttributeListeners) {
@@ -237,7 +237,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeHttpSessionAttributeAdded(HttpSession session, String name, Object value) {
-        logger.info("invoke HttpSessionAttributeAdded: {} = {}, session = {}", name, value, session);
+        logger.debug("invoke HttpSessionAttributeAdded: {} = {}, session = {}", name, value, session);
         if (this.httpSessionAttributeListeners != null) {
             var event = new HttpSessionBindingEvent(session, name, value);
             for (var listener : this.httpSessionAttributeListeners) {
@@ -247,7 +247,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeHttpSessionAttributeRemoved(HttpSession session, String name, Object value) {
-        logger.info("invoke ServletContextAttributeRemoved: {} = {}, session = {}", name, value, session);
+        logger.debug("invoke ServletContextAttributeRemoved: {} = {}, session = {}", name, value, session);
         if (this.httpSessionAttributeListeners != null) {
             var event = new HttpSessionBindingEvent(session, name, value);
             for (var listener : this.httpSessionAttributeListeners) {
@@ -257,7 +257,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeHttpSessionAttributeReplaced(HttpSession session, String name, Object value) {
-        logger.info("invoke ServletContextAttributeReplaced: {} = {}, session = {}", name, value, session);
+        logger.debug("invoke ServletContextAttributeReplaced: {} = {}, session = {}", name, value, session);
         if (this.httpSessionAttributeListeners != null) {
             var event = new HttpSessionBindingEvent(session, name, value);
             for (var listener : this.httpSessionAttributeListeners) {
@@ -267,7 +267,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletRequestInitialized(HttpServletRequest request) {
-        logger.info("invoke ServletRequestInitialized: request = {}", request);
+        logger.debug("invoke ServletRequestInitialized: request = {}", request);
         if (this.servletRequestListeners != null) {
             var event = new ServletRequestEvent(this, request);
             for (var listener : this.servletRequestListeners) {
@@ -277,7 +277,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeServletRequestDestroyed(HttpServletRequest request) {
-        logger.info("invoke ServletRequestDestroyed: request = {}", request);
+        logger.debug("invoke ServletRequestDestroyed: request = {}", request);
         if (this.servletRequestListeners != null) {
             var event = new ServletRequestEvent(this, request);
             for (var listener : this.servletRequestListeners) {
@@ -287,7 +287,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeHttpSessionCreated(HttpSession session) {
-        logger.info("invoke HttpSessionCreated: session = {}", session);
+        logger.debug("invoke HttpSessionCreated: session = {}", session);
         if (this.httpSessionListeners != null) {
             var event = new HttpSessionEvent(session);
             for (var listener : this.httpSessionListeners) {
@@ -297,7 +297,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     void invokeHttpSessionDestroyed(HttpSession session) {
-        logger.info("invoke HttpSessionDestroyed: session = {}", session);
+        logger.debug("invoke HttpSessionDestroyed: session = {}", session);
         if (this.httpSessionListeners != null) {
             var event = new HttpSessionEvent(session);
             for (var listener : this.httpSessionListeners) {
