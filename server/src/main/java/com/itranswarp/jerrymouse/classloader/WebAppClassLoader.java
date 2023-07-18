@@ -27,9 +27,9 @@ public class WebAppClassLoader extends URLClassLoader {
         super("WebAppClassLoader", createUrls(classPath, libPath), ClassLoader.getSystemClassLoader());
         this.classPath = classPath.toAbsolutePath().normalize();
         this.libJars = Files.list(libPath).filter(p -> p.toString().endsWith(".jar")).map(p -> p.toAbsolutePath().normalize()).sorted().toArray(Path[]::new);
-        logger.info("init {} class path: {}", getClass().getName(), this.classPath);
+        logger.info("set classes path: {}", this.classPath);
         Arrays.stream(this.libJars).forEach(p -> {
-            logger.info("init {} jar path: {}", getClass().getName(), p);
+            logger.info("set jar path: {}", p);
         });
     }
 
