@@ -134,7 +134,7 @@ public class Start {
                     logger.error("load class '{}' failed: {}: {}", className, err.getClass().getSimpleName(), err.getMessage());
                     return;
                 }
-                if (clazz.isAnnotationPresent(WebServlet.class) || clazz.isAnnotationPresent(WebFilter.class)) {
+                if (clazz.isAnnotationPresent(WebServlet.class)) {
                     logger.info("Found @WebServlet: {}", clazz.getName());
                     classSet.add(clazz);
                 }
