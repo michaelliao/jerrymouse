@@ -22,6 +22,7 @@
 		<maven.compiler.source>20</maven.compiler.source>
 		<maven.compiler.target>20</maven.compiler.target>
 		<java.version>20</java.version>
+		<jar.finalName>jerrymouse-${project.version}</jar.finalName>
 
 		<commons-cli.version>1.5.0</commons-cli.version>
 		<jackson.version>2.14.2</jackson.version>
