@@ -283,6 +283,9 @@ public class HttpServletResponseImpl implements HttpServletResponse {
     }
 
     public void cleanup() throws IOException {
+        if (!this.committed) {
+            commitHeaders(-1);
+        }
         if (this.callOutput != null) {
             if (this.callOutput.booleanValue()) {
                 this.output.close();
