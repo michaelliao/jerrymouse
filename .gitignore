@@ -479,4 +479,4 @@ test.db
 testdb.*
 !.gitignore
 !.gitsubmodules
-!release/jerrymouse-*.jar
+!download/jerrymouse-*.jar
