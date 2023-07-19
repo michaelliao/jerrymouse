@@ -6,7 +6,7 @@
 
 Jerrymouse is a minimum version of the Tomcat Server.
 
-[Download](https://github.com/michaelliao/jerrymouse/tree/master/release)
+[Download](download)
 
 Servlet 6 standard support:
 
