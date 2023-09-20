@@ -156,9 +156,9 @@ public class Start {
         if (config.server.enableVirtualThread) {
             logger.info("Virtual thread is enabled.");
         }
-        // config.server.enableVirtualThread ?
-        // Executors.newVirtualThreadPerTaskExecutor() :
-        ExecutorService executor = new ThreadPoolExecutor(0, config.server.threadPoolSize, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        ExecutorService executor = config.server.enableVirtualThread ? Executors.newVirtualThreadPerTaskExecutor()
+                : new ThreadPoolExecutor(0, config.server.threadPoolSize, 0L, TimeUnit.MILLISECONDS,
+                        new LinkedBlockingQueue<>());
 
         try (HttpConnector connector = new HttpConnector(config, webRoot, executor, classLoader, autoScannedClasses)) {
             for (;;) {
