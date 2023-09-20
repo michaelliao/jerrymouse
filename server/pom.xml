@@ -19,9 +19,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<project.version>1.0.0</project.version>
-		<maven.compiler.source>20</maven.compiler.source>
-		<maven.compiler.target>20</maven.compiler.target>
-		<java.version>20</java.version>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<java.version>21</java.version>
 		<jar.finalName>jerrymouse-${project.version}</jar.finalName>
 
 		<commons-cli.version>1.5.0</commons-cli.version>
