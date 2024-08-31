@@ -24,4 +24,4 @@ Key features:
 - Not support deploy multiple web apps;
 - Not support hot reload.
 
-[Tutorial](https://www.liaoxuefeng.com/wiki/1545956031987744)
+[Tutorial](https://liaoxuefeng.com/books/jerrymouse/)
