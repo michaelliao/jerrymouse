@@ -14,15 +14,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -880,13 +872,7 @@ public class ServletContextImpl implements ServletContext {
         // important: sort by servlet mapping:
         Collections.sort(this.servletMappings);
         // important: sort by filter name:
-        Collections.sort(this.filterMappings, (f1, f2) -> {
-            int cmp = f1.filterName.compareTo(f2.filterName);
-            if (cmp == 0) {
-                cmp = f1.compareTo(f2);
-            }
-            return cmp;
-        });
+        Collections.sort(this.filterMappings, Comparator.comparing((FilterMapping f) -> f.filterName).thenComparing(f -> f));
 
         this.initialized = true;
     }

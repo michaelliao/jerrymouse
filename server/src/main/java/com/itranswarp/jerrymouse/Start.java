@@ -8,11 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,6 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -176,7 +173,7 @@ public class Start {
     }
 
     // return classes and lib path:
-    Path[] extractWarIfNecessary(Path warPath) throws IOException {
+    private Path[] extractWarIfNecessary(Path warPath) throws IOException {
         if (Files.isDirectory(warPath)) {
             logger.info("war is directy: {}", warPath);
             Path classesPath = warPath.resolve("WEB-INF/classes");
@@ -188,7 +185,7 @@ public class Start {
         Path extractPath = createExtractTo();
         logger.info("extract '{}' to '{}'", warPath, extractPath);
         JarFile war = new JarFile(warPath.toFile());
-        war.stream().sorted((e1, e2) -> e1.getName().compareTo(e2.getName())).forEach(entry -> {
+        war.stream().sorted(Comparator.comparing(ZipEntry::getName)).forEach(entry -> {
             if (!entry.isDirectory()) {
                 Path file = extractPath.resolve(entry.getName());
                 Path dir = file.getParent();
@@ -214,7 +211,7 @@ public class Start {
         return new Path[] { classesPath, libPath };
     }
 
-    Path parseWarFile(String warFile) {
+    private Path parseWarFile(String warFile) {
         Path warPath = Path.of(warFile).toAbsolutePath().normalize();
         if (!Files.isRegularFile(warPath) && !Files.isDirectory(warPath)) {
             System.err.printf("war file '%s' was not found.\n", warFile);
@@ -223,7 +220,7 @@ public class Start {
         return warPath;
     }
 
-    Path createExtractTo() throws IOException {
+    private Path createExtractTo() throws IOException {
         Path tmp = Files.createTempDirectory("_jm_");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -235,7 +232,7 @@ public class Start {
         return tmp;
     }
 
-    void deleteDir(Path p) throws IOException {
+    private void deleteDir(Path p) throws IOException {
         Files.list(p).forEach(c -> {
             try {
                 if (Files.isDirectory(c)) {
@@ -250,13 +247,13 @@ public class Start {
         Files.delete(p);
     }
 
-    Config loadConfig(String config) throws JacksonException {
+    private Config loadConfig(String config) throws JacksonException {
         var objectMapper = new ObjectMapper(new YAMLFactory()).setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper.readValue(config, Config.class);
     }
 
-    static void merge(Object source, Object override) throws ReflectiveOperationException {
+    private static void merge(Object source, Object override) throws ReflectiveOperationException {
         for (Field field : source.getClass().getFields()) {
             Object overrideFieldValue = field.get(override);
             if (overrideFieldValue != null) {
