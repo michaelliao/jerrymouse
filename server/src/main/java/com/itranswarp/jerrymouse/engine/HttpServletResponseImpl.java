@@ -13,6 +13,7 @@ import com.itranswarp.jerrymouse.Config;
 import com.itranswarp.jerrymouse.connector.HttpExchangeResponse;
 import com.itranswarp.jerrymouse.engine.support.HttpHeaders;
 
+import com.itranswarp.jerrymouse.utils.JwtUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,6 +43,16 @@ public class HttpServletResponseImpl implements HttpServletResponse {
         this.headers = new HttpHeaders(exchangeResponse.getResponseHeaders());
         this.characterEncoding = config.server.responseEncoding;
         this.setContentType("text/html");
+    }
+
+    public void setJwt(String username) {
+        if (this.isCommitted()) {
+            throw new IllegalStateException("Cannot create jwt for response is commited.");
+        }
+
+        String jwt = JwtUtil.generateJwt(username);
+        String cookieValue = "JWT=" + jwt + "; Path=/; SameSite=Strict; HttpOnly";
+        addHeader("Set-Cookie", cookieValue);
     }
 
     @Override

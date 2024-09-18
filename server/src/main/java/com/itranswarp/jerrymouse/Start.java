@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.itranswarp.jerrymouse.classloader.Resource;
 import com.itranswarp.jerrymouse.classloader.WebAppClassLoader;
 import com.itranswarp.jerrymouse.connector.HttpConnector;
@@ -247,8 +247,8 @@ public class Start {
         Files.delete(p);
     }
 
-    private Config loadConfig(String config) throws JacksonException {
-        var objectMapper = new ObjectMapper(new YAMLFactory()).setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE)
+    private Config loadConfig(String config) throws IOException {
+        var objectMapper = new ObjectMapper(new YAMLFactory()).setPropertyNamingStrategy(PropertyNamingStrategy.KEBAB_CASE)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper.readValue(config, Config.class);
     }

@@ -15,6 +15,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import com.itranswarp.jerrymouse.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
@@ -37,8 +40,12 @@ import com.itranswarp.jerrymouse.engine.support.Attributes;
 import com.itranswarp.jerrymouse.engine.support.HttpHeaders;
 import com.itranswarp.jerrymouse.engine.support.Parameters;
 import com.itranswarp.jerrymouse.utils.HttpUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpServletRequestImpl implements HttpServletRequest {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpServletRequestImpl.class);
 
     final Config config;
     final ServletContextImpl servletContext;
@@ -362,6 +369,52 @@ public class HttpServletRequestImpl implements HttpServletRequest {
             this.response.addHeader("Set-Cookie", cookieValue);
         }
         return this.servletContext.sessionManager.getSession(sessionId);
+    }
+
+    public boolean verifyCookie(String cookieName) {
+        if ("JSESSIONID".equals(cookieName)) {
+            HttpSession session = getSession();
+            return session.getAttribute("username") != null;
+        } else if ("JWT".equals(cookieName)) {
+            return verifyJwt();
+        } else {
+            throw new IllegalArgumentException("No such authorization cookie name: " + cookieName);
+        }
+    }
+
+    private boolean verifyJwt() {
+        Cookie[] cookies = getCookies();
+        String jwt = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("JWT".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (jwt != null) {
+            try {
+                Claims claims = Jwts.parser()
+                        .setSigningKey(JwtUtil.publicKey)
+                        .parseClaimsJws(jwt)
+                        .getBody();
+
+                if (claims != null) {
+                    logger.info("Verified jwt, subject: {}", claims.getSubject());
+                    return true;
+                } else {
+                    logger.error("jwt验证失败");
+                    return false;
+                }
+            } catch (Exception e) {
+                logger.error("jwt fail to verify: {}", e.getMessage());
+            }
+        }
+
+        return false;
     }
 
     @Override
