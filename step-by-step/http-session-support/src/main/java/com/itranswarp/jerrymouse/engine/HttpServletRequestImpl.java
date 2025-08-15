@@ -121,7 +121,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
         }
         if (sessionId == null) {
             if (this.response.isCommitted()) {
-                throw new IllegalStateException("Cannot create session for response is commited.");
+                throw new IllegalStateException("Cannot create session for response is committed.");
             }
             sessionId = UUID.randomUUID().toString();
             // set cookie:
