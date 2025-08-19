@@ -475,8 +475,7 @@ public class ServletContextImpl implements ServletContext {
         }
         Servlet servlet = null;
         try {
-            Class<? extends Servlet> clazz = createInstance(className);
-            servlet = createInstance(clazz);
+            servlet = createInstance(className);
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
@@ -541,8 +540,7 @@ public class ServletContextImpl implements ServletContext {
         }
         Filter filter = null;
         try {
-            Class<? extends Filter> clazz = createInstance(className);
-            filter = createInstance(clazz);
+            filter = createInstance(className);
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
@@ -623,8 +621,7 @@ public class ServletContextImpl implements ServletContext {
         }
         EventListener listener = null;
         try {
-            Class<EventListener> clazz = createInstance(className);
-            listener = createInstance(clazz);
+            listener = createInstance(className);
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
