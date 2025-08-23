@@ -19,7 +19,7 @@ server:
     # session timeout = 30 min = 1800 sec:
     session-timeout: 1800
 
-  # forwarded headers should ONLY set when behide a reverse proxy like Nginx:
+  # forwarded headers should ONLY set when behind a reverse proxy like Nginx:
   forwarded-headers:
     # usually set to "X-Forwarded-Proto"
     forwarded-proto: 
