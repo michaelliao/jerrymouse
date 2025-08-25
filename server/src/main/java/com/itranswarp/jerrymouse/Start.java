@@ -178,7 +178,7 @@ public class Start {
     // return classes and lib path:
     Path[] extractWarIfNecessary(Path warPath) throws IOException {
         if (Files.isDirectory(warPath)) {
-            logger.info("war is directy: {}", warPath);
+            logger.info("war is directory: {}", warPath);
             Path classesPath = warPath.resolve("WEB-INF/classes");
             Path libPath = warPath.resolve("WEB-INF/lib");
             Files.createDirectories(classesPath);
