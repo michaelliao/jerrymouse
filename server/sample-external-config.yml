@@ -1,5 +1,0 @@
-server:
-  host: 127.0.0.1
-  enable-virtual-thread: true
-  mime-types:
-    .exe: application/vnd.microsoft.portable-executable
