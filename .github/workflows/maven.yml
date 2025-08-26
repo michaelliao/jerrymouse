@@ -36,6 +36,6 @@ jobs:
         find . -name "pom.xml" -printf '%h\n' | sort -u | while read dir; do
           echo "Build project in directory: $dir"
           cd "$dir"
-          mvn clean package
+          mvn -B clean package
           cd - > /dev/null
         done
