@@ -36,6 +36,5 @@ jobs:
           echo "========================================================================="
           echo "==> Building Maven project in: $(dirname "$pom_file")"
           echo "========================================================================="
-          cd "$(dirname "$pom_file")"
-          mvn -B clean package
+          mvn -B -f "$pom_file" clean package
         done
