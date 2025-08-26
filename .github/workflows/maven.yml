@@ -33,9 +33,10 @@ jobs:
         cache: 'maven'
     - name: Find Maven projects and build
       run: |
-        find . -name "pom.xml" -exec dirname {} \; | grep -v "/target$" | sort -u | while read dir; do
-          echo "Build project in directory: $dir"
-          cd "$dir"
+        find . -type f -name 'pom.xml' -not -path '*/target/*' | while read -r pom_file; do
+          echo "========================================================================="
+          echo "==> Building Maven project in: $(dirname "$pom_file")"
+          echo "========================================================================="
+          cd "$(dirname "$pom_file")"
           mvn -B clean package
-          cd - > /dev/null
         done
