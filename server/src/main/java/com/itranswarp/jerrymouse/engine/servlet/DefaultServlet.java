@@ -98,7 +98,7 @@ public class DefaultServlet extends HttpServlet {
                 pw.flush();
                 return;
             }
-        } else if (Files.isReadable(path) && Files.isReadable(path)) {
+        } else if (Files.isReadable(path)) {
             logger.debug("read file: {}", path);
             resp.setContentType(getServletContext().getMimeType(uri));
             ServletOutputStream output = resp.getOutputStream();
