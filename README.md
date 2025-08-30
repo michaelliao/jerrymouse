@@ -8,7 +8,7 @@
 
 Jerrymouse is a lightweight servlet container that implements the Jakarta Servlet 6 specification. It serves as a minimalist version of Apache Tomcat, focusing on core servlet functionality while maintaining a straightforward architecture that's easy to understand.
 
-[Download](./releases)
+[Download](https://github.com/michaelliao/jerrymouse/releases)
 
 # Purpose and Scope
 
