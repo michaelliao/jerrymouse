@@ -1,4 +1,4 @@
-# Jerrymouse
+# Jerrymouse Server
 
 ![Build Status](https://github.com/michaelliao/jerrymouse/actions/workflows/maven.yml/badge.svg)
 
@@ -6,9 +6,9 @@
 
 # Overview
 
-Jerrymouse is a lightweight servlet container that implements the Jakarta Servlet 6 specification. It serves as a minimalist version of Apache Tomcat, focusing on core servlet functionality while maintaining a straightforward architecture that's easy to understand.
+Jerrymouse server is a lightweight servlet container that implements the [Jakarta Servlet 6 specification](https://jakarta.ee/specifications/servlet/6.0/). It serves as a minimalist version of [Apache Tomcat](https://tomcat.apache.org/), focusing on core servlet functionality while maintaining a straightforward architecture that's easy to understand.
 
-[Download](https://github.com/michaelliao/jerrymouse/releases)
+Jerrymouse server can be downloaded from [Github Release](https://github.com/michaelliao/jerrymouse/releases).
 
 # Purpose and Scope
 
