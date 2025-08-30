@@ -46,7 +46,6 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: server/target/jerrymouse-server-1.0.0.jar
-        tag: ${{ env.RELEASE_AT }}
         release_name: jerrymouse-${{ env.RELEASE_AT }}
         body: Jerrymouse Server Release
         overwrite: true
