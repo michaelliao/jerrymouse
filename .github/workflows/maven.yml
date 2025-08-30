@@ -38,3 +38,15 @@ jobs:
           echo "========================================================================="
           mvn -B -f "$pom_file" clean package
         done
+    - name: Setup Env
+      run: |
+        echo "RELEASE_AT=`echo ${{ github.event.head_commit.timestamp }} | sed 's/[:+]/-/g' | cut -c1-19`" >> "$GITHUB_ENV"
+    - name: Release Zip
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: server/target/jerrymouse-server-1.0.0.jar
+        tag: ${{ env.RELEASE_AT }}
+        release_name: jerrymouse-${{ env.RELEASE_AT }}
+        body: Jerrymouse Server Release
+        overwrite: true
